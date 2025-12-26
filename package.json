@@ -1,0 +1,14 @@
+{
+  "name": "playwrighttests",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "hari.tetala@zucitech.com",
+  "license": "ISC",
+  "description": "Playwright_tests",
+  "dependencies": {
+    "playwright": "^1.57.0"
+  }
+}
