@@ -16,26 +16,29 @@ jobs:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: 18
 
-      - run: npm ci
+      - name: Install dependencies
+        run: npm ci
 
-      - run: npx playwright install --with-deps
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
 
       - name: Run Playwright tests
-        id: run_tests
         run: npm run test
 
       - name: AI Failure Analysis & Fix
-        if: steps.run_tests.outcome == 'failure'
+        if: failure()
         run: npm run analyse_failures
 
       - name: Commit AI fixes
-        if: steps.run_tests.outcome == 'failure'
+        if: failure()
         run: |
           git config user.name "ai-bot"
           git config user.email "ai-bot@users.noreply.github.com"
@@ -45,18 +48,18 @@ jobs:
           git push -f origin "$AI_BRANCH"
 
       - name: Install GitHub CLI
-        if: steps.run_tests.outcome == 'failure'
+        if: failure()
         run: sudo apt-get install gh -y
 
       - name: Create PR
-        if: steps.run_tests.outcome == 'failure'
+        if: failure()
         run: |
           gh pr create \
             --title "AI Fix (Run $GITHUB_RUN_ID): Playwright failure" \
             --body "Automated AI fix from GitHub Actions run $GITHUB_RUN_ID." \
             --base main \
             --head "$AI_BRANCH"
-            
+
       - uses: actions/upload-artifact@v4
         if: always()
         with:
