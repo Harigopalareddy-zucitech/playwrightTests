@@ -3,8 +3,10 @@ import fs from 'fs';
 import path from 'path';
 import OpenAI from 'openai';
 
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY
+
 const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
+    apiKey: OPENAI_API_KEY,
 });
 
 function loadOptionalDomSnippet(domPath) {
@@ -18,7 +20,7 @@ function loadScreenshotBase64(imagePath) {
 }
 
 export default async function analyseFailures() {
-    if (!process.env.OPENAI_API_KEY) {
+    if (!OPENAI_API_KEY) {
         throw new Error('OPENAI_API_KEY is not set');
     }
     let results = []
