@@ -28,7 +28,6 @@ jobs:
 
       - name: Run Playwright tests
         id: run_tests
-        continue-on-error: true
         run: npm run test
 
       - name: AI Failure Analysis & Fix
