@@ -5,8 +5,7 @@ import path from 'path';
 export const test = base.extend({
     page: async ({ page }, use, testInfo) => {
         await use(page);
-
-        // 👇 Runs AFTER each test
+        
         if (testInfo.status !== testInfo.expectedStatus) {
             const domSnippet = await page.evaluate(() => {
                 const body = document.body;
