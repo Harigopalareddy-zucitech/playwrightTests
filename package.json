@@ -1,6 +1,7 @@
 {
   "name": "playwrighttests",
   "version": "1.0.0",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -8,6 +9,7 @@
   "license": "ISC",
   "description": "Playwright_tests",
   "dependencies": {
+    "openai": "^6.15.0",
     "playwright": "^1.57.0"
   }
 }
