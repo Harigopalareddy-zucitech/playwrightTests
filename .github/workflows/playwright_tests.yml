@@ -1,5 +1,9 @@
 name: Playwright Tests
 
+permissions:
+  contents: write
+  pull-requests: write
+
 on:
   workflow_dispatch:
 
@@ -23,7 +27,35 @@ jobs:
         run: npx playwright install --with-deps
 
       - name: Run Playwright tests
-        run: npx playwright test
+        run: npm run test
+
+      - name: AI Failure Analysis & Fix
+        if: failure()
+        run: npm run analyse_failures
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+
+      - name: Commit AI fixes
+        if: failure()
+        run: |
+          git config user.name "ai-bot"
+          git config user.email "ai-bot@users.noreply.github.com"
+          git checkout -B ai/fix-playwright-failure
+          git add .
+          git diff --quiet || git commit -m "AI: Fix Playwright selector failure"
+          git push -f origin ai/fix-playwright-failure
+
+      - name: Create PR
+        if: failure()
+        run: |
+          gh pr view ai/fix-playwright-failure || \
+          gh pr create \
+            --title "AI: Fix Playwright test failure" \
+            --body "Automated AI fix based on failure analysis." \
+            --base main \
+            --head ai/fix-playwright-failure
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload Playwright Report
         if: always()

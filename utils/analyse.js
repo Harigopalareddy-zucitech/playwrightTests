@@ -18,6 +18,9 @@ function loadScreenshotBase64(imagePath) {
 }
 
 export default async function analyseFailures() {
+    if (!process.env.OPENAI_API_KEY) {
+        throw new Error('OPENAI_API_KEY is not set');
+    }
     let results = []
     const reportPath = path.join(process.cwd(), 'results.json');
     const report = JSON.parse(fs.readFileSync(reportPath, 'utf-8'));
