@@ -12,54 +12,54 @@ jobs:
     runs-on: ubuntu-latest
     env:
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      AI_BRANCH: ai/fix-playwright-failure-${{ github.run_id }}
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 18
 
-      - name: Install dependencies
-        run: npm ci
+      - run: npm ci
 
-      - name: Install Playwright Browsers
-        run: npx playwright install --with-deps
+      - run: npx playwright install --with-deps
 
       - name: Run Playwright tests
+        id: run_tests
+        continue-on-error: true
         run: npm run test
 
       - name: AI Failure Analysis & Fix
-        if: failure()
+        if: steps.run_tests.outcome == 'failure'
         run: npm run analyse_failures
 
       - name: Commit AI fixes
-        if: failure()
+        if: steps.run_tests.outcome == 'failure'
         run: |
           git config user.name "ai-bot"
           git config user.email "ai-bot@users.noreply.github.com"
-          git checkout -B ai/fix-playwright-failure
+          git checkout -B "$AI_BRANCH"
           git add .
-          git diff --quiet || git commit -m "AI: Fix Playwright selector failure"
-          git push -f origin ai/fix-playwright-failure
+          git diff --quiet || git commit -m "AI: Fix Playwright failure (run $GITHUB_RUN_ID)"
+          git push -f origin "$AI_BRANCH"
+
+      - name: Install GitHub CLI
+        if: steps.run_tests.outcome == 'failure'
+        run: sudo apt-get install gh -y
 
       - name: Create PR
-        if: failure()
+        if: steps.run_tests.outcome == 'failure'
         run: |
-          gh pr view ai/fix-playwright-failure || \
           gh pr create \
-            --title "AI: Fix Playwright test failure" \
-            --body "Automated AI fix based on failure analysis." \
+            --title "AI Fix (Run $GITHUB_RUN_ID): Playwright failure" \
+            --body "Automated AI fix from GitHub Actions run $GITHUB_RUN_ID." \
             --base main \
-            --head ai/fix-playwright-failure
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            --head "$AI_BRANCH"
 
-      - name: Upload Playwright Report
+      - uses: actions/upload-artifact@v4
         if: always()
-        uses: actions/upload-artifact@v4
         with:
           name: playwright-report
           path: playwright-report/
