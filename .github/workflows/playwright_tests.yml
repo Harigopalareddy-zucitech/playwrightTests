@@ -10,6 +10,8 @@ on:
 jobs:
   playwright-tests:
     runs-on: ubuntu-latest
+    env:
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 
     steps:
       - name: Checkout repository
@@ -32,8 +34,6 @@ jobs:
       - name: AI Failure Analysis & Fix
         if: failure()
         run: npm run analyse_failures
-        env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 
       - name: Commit AI fixes
         if: failure()
