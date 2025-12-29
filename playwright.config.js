@@ -5,7 +5,7 @@ export default defineConfig({
     reporter: [['html', { open: 'never' }], ['json', { outputFile: 'results.json' }]],
     // retries: 1,
     use: {
-        headless: false,
+        // headless: false,
         trace: 'on-first-retry',
         screenshot: 'only-on-failure',
         video: 'retain-on-failure',
