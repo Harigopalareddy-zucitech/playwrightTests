@@ -1,7 +1,7 @@
 {
   "config": {
-    "configFile": "/Users/hari/Work/playwrightTests/playwright.config.js",
-    "rootDir": "/Users/hari/Work/playwrightTests/tests",
+    "configFile": "/home/runner/work/playwrightTests/playwrightTests/playwright.config.js",
+    "rootDir": "/home/runner/work/playwrightTests/playwrightTests/tests",
     "forbidOnly": false,
     "fullyParallel": false,
     "globalSetup": null,
@@ -11,6 +11,28 @@
     "grepInvert": null,
     "maxFailures": 0,
     "metadata": {
+      "ci": {
+        "commitHref": "https://github.com/Harigopalareddy-zucitech/playwrightTests/commit/36b671cea6c7722f79e28d704b7d4691dc8359d3",
+        "commitHash": "36b671cea6c7722f79e28d704b7d4691dc8359d3",
+        "buildHref": "https://github.com/Harigopalareddy-zucitech/playwrightTests/actions/runs/20597128398"
+      },
+      "gitCommit": {
+        "shortHash": "36b671c",
+        "hash": "36b671cea6c7722f79e28d704b7d4691dc8359d3",
+        "subject": "fix6",
+        "body": "fix6\n",
+        "author": {
+          "name": "Harigopalareddy-zucitech",
+          "email": "hari.tetala@zucitech.com",
+          "time": 1767099708000
+        },
+        "committer": {
+          "name": "Harigopalareddy-zucitech",
+          "email": "hari.tetala@zucitech.com",
+          "time": 1767099708000
+        },
+        "branch": "file_fix"
+      },
       "actualWorkers": 1
     },
     "preserveOutput": "always",
@@ -35,15 +57,37 @@
     "quiet": false,
     "projects": [
       {
-        "outputDir": "/Users/hari/Work/playwrightTests/test-results",
+        "outputDir": "/home/runner/work/playwrightTests/playwrightTests/test-results",
         "repeatEach": 1,
         "retries": 0,
         "metadata": {
+          "ci": {
+            "commitHref": "https://github.com/Harigopalareddy-zucitech/playwrightTests/commit/36b671cea6c7722f79e28d704b7d4691dc8359d3",
+            "commitHash": "36b671cea6c7722f79e28d704b7d4691dc8359d3",
+            "buildHref": "https://github.com/Harigopalareddy-zucitech/playwrightTests/actions/runs/20597128398"
+          },
+          "gitCommit": {
+            "shortHash": "36b671c",
+            "hash": "36b671cea6c7722f79e28d704b7d4691dc8359d3",
+            "subject": "fix6",
+            "body": "fix6\n",
+            "author": {
+              "name": "Harigopalareddy-zucitech",
+              "email": "hari.tetala@zucitech.com",
+              "time": 1767099708000
+            },
+            "committer": {
+              "name": "Harigopalareddy-zucitech",
+              "email": "hari.tetala@zucitech.com",
+              "time": 1767099708000
+            },
+            "branch": "file_fix"
+          },
           "actualWorkers": 1
         },
         "id": "",
         "name": "",
-        "testDir": "/Users/hari/Work/playwrightTests/tests",
+        "testDir": "/home/runner/work/playwrightTests/playwrightTests/tests",
         "testIgnore": [],
         "testMatch": [
           "**/*.@(spec|test).?(c|m)[jt]s?(x)"
@@ -56,7 +100,7 @@
     "updateSnapshots": "missing",
     "updateSourceMethod": "patch",
     "version": "1.57.0",
-    "workers": 5,
+    "workers": 2,
     "webServer": null
   },
   "suites": [
@@ -68,7 +112,7 @@
       "specs": [
         {
           "title": "signup test",
-          "ok": true,
+          "ok": false,
           "tags": [],
           "tests": [
             {
@@ -81,18 +125,53 @@
                 {
                   "workerIndex": 0,
                   "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 2511,
-                  "errors": [],
+                  "status": "timedOut",
+                  "duration": 30522,
+                  "error": {
+                    "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m",
+                    "stack": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                  },
+                  "errors": [
+                    {
+                      "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                    },
+                    {
+                      "message": "Error: ENOENT: no such file or directory, copyfile '/home/runner/work/playwrightTests/playwrightTests/test-results/signup test/ai-context/trace.zip' -> '/home/runner/work/playwrightTests/playwrightTests/test-results/sampleTests-signup-test/attachments/trace-88535fe084cf641b0c17e6f2bdb109e429a4280d.zip'"
+                    },
+                    {
+                      "location": {
+                        "file": "/home/runner/work/playwrightTests/playwrightTests/tests/sampleTests.spec.js",
+                        "column": 94,
+                        "line": 7
+                      },
+                      "message": "Error: locator.click: Test timeout of 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('//a[contains(@title, \\'Sign Up\\')]//span[contains(text(), \\'Sig Up\\')]')\u001b[22m\n\n\n   5 |     await page.goto(\"https://flipkart.com\");\n   6 |     await page.locator(\"//a[contains(@title, 'Login')]//span[contains(text(), 'Login')]\").hover();\n>  7 |     await page.locator(\"//a[contains(@title, 'Sign Up')]//span[contains(text(), 'Sig Up')]\").click();\n     |                                                                                              ^\n   8 |     expect(page.url()).toEqual('https://www.flipkart.com/account/login?signup=true&ret=/')\n   9 | })\n  10 |\n    at /home/runner/work/playwrightTests/playwrightTests/tests/sampleTests.spec.js:7:94"
+                    }
+                  ],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2025-12-29T09:21:56.474Z",
+                  "startTime": "2025-12-30T13:03:37.123Z",
                   "annotations": [],
-                  "attachments": []
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "/home/runner/work/playwrightTests/playwrightTests/test-results/sampleTests-signup-test/test-failed-1.png"
+                    },
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "/home/runner/work/playwrightTests/playwrightTests/test-results/sampleTests-signup-test/video.webm"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/home/runner/work/playwrightTests/playwrightTests/test-results/sampleTests-signup-test/error-context.md"
+                    }
+                  ]
                 }
               ],
-              "status": "expected"
+              "status": "unexpected"
             }
           ],
           "id": "ca1cd25e8a27bb44ac3d-f77b9196311cb8312bcb",
@@ -102,7 +181,7 @@
         },
         {
           "title": "Seller test",
-          "ok": true,
+          "ok": false,
           "tags": [],
           "tests": [
             {
@@ -113,20 +192,55 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 0,
+                  "workerIndex": 1,
                   "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 4268,
-                  "errors": [],
+                  "status": "timedOut",
+                  "duration": 30523,
+                  "error": {
+                    "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m",
+                    "stack": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                  },
+                  "errors": [
+                    {
+                      "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                    },
+                    {
+                      "message": "Error: ENOENT: no such file or directory, copyfile '/home/runner/work/playwrightTests/playwrightTests/test-results/Seller test/ai-context/trace.zip' -> '/home/runner/work/playwrightTests/playwrightTests/test-results/sampleTests-Seller-test/attachments/trace-3ba9d73d868084d1273cf4b06b6730f1f5376e7c.zip'"
+                    },
+                    {
+                      "location": {
+                        "file": "/home/runner/work/playwrightTests/playwrightTests/tests/sampleTests.spec.js",
+                        "column": 67,
+                        "line": 13
+                      },
+                      "message": "Error: locator.click: Test timeout of 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('//a[contains(text(), \\'Become a Seler\\')]')\u001b[22m\n\n\n  11 | test('Seller test', async ({ page }) => {\n  12 |     await page.goto(\"https://flipkart.com\");\n> 13 |     await page.locator(\"//a[contains(text(), 'Become a Seler')]\").click();\n     |                                                                   ^\n  14 |     await page.waitForLoadState('load')\n  15 |     expect(await page.locator(\"//button[text()='Start Selling']\").isVisible()).toBeTruthy();\n  16 | })\n    at /home/runner/work/playwrightTests/playwrightTests/tests/sampleTests.spec.js:13:67"
+                    }
+                  ],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2025-12-29T09:21:59.467Z",
+                  "startTime": "2025-12-30T13:04:09.434Z",
                   "annotations": [],
-                  "attachments": []
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "/home/runner/work/playwrightTests/playwrightTests/test-results/sampleTests-Seller-test/test-failed-1.png"
+                    },
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "/home/runner/work/playwrightTests/playwrightTests/test-results/sampleTests-Seller-test/video.webm"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/home/runner/work/playwrightTests/playwrightTests/test-results/sampleTests-Seller-test/error-context.md"
+                    }
+                  ]
                 }
               ],
-              "status": "expected"
+              "status": "unexpected"
             }
           ],
           "id": "ca1cd25e8a27bb44ac3d-6cd7e5fcfe9b92f8f0ac",
@@ -139,11 +253,11 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2025-12-29T09:21:56.036Z",
-    "duration": 8001.851000000001,
-    "expected": 2,
+    "startTime": "2025-12-30T13:03:36.433Z",
+    "duration": 64457.295,
+    "expected": 0,
     "skipped": 0,
-    "unexpected": 0,
+    "unexpected": 2,
     "flaky": 0
   }
 }
