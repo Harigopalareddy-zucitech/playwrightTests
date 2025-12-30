@@ -1,44 +1,64 @@
 import fs from 'fs';
-import analysefailures from './analyse.js';
 import path from 'path';
+import analyseFailures from './analyse.js'
 
 export async function writeAISuggestions() {
-    const results = await analysefailures();
-    console.log(results)
-    if (
-        !results ||
-        results.length === 0
-    ) {
+    const results = await analyseFailures();
+
+    if (!results || results.length === 0) {
         console.log('No safe AI suggestions to apply.');
         return;
     }
 
+    let appliedFix = false;
+
     for (const result of results) {
         if (result.confidence < 40) {
-            console.log(`Confidence too low. Skipping auto-fix for file ${result.title}`);
-            return;
+            console.log(`Low confidence. Skipping ${result.title}`);
+            continue;
         }
 
-        const suggestion = result.selectorSuggestions[0];
+        const suggestion = result.selectorSuggestions?.[0];
+        if (!suggestion) continue;
+
         const { old, new: replacement } = suggestion;
 
-        const absolutePath = result.fileLocation;
-        const relativePath = path.relative(process.cwd(), absolutePath);
-        const filePath = path.join(process.cwd(), relativePath);
-        const fileData = fs.readFileSync(filePath, 'utf-8');
-        if (!fileData.includes(old)) {
-            console.log('Old selector not found in file. Aborting.');
-            return;
+        // 🔒 Ensure path is inside repo
+        const repoRoot = process.cwd();
+        const filePath = path.resolve(repoRoot, result.fileLocation);
+
+        if (!filePath.startsWith(repoRoot)) {
+            console.log(`Skipping file outside repo: ${filePath}`);
+            continue;
         }
 
-        const updatedData = fileData.replace(old, replacement);
-        if (updatedData === fileData) {
-            console.log('No changes made. Aborting.');
-            return;
+        if (!fs.existsSync(filePath)) {
+            console.log(`File not found: ${filePath}`);
+            continue;
         }
+
+        const fileData = fs.readFileSync(filePath, 'utf-8');
+
+        if (!fileData.includes(old)) {
+            console.log(`Selector not found in ${filePath}`);
+            continue;
+        }
+
+        const updatedData = fileData.split(old).join(replacement);
+
+        if (updatedData === fileData) {
+            console.log(`No effective change for ${filePath}`);
+            continue;
+        }
+
         fs.writeFileSync(filePath, updatedData, 'utf-8');
-        console.log(`✅ AI fix applied to ${filePath}`);
+        console.log(`AI fix applied to ${filePath}`);
+        appliedFix = true;
+    }
+
+    if (!appliedFix) {
+        console.log('AI ran but produced no code changes.');
     }
 }
 
-await writeAISuggestions()
+await writeAISuggestions();

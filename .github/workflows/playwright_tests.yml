@@ -33,6 +33,11 @@ jobs:
       - name: Run Playwright tests
         run: npm run test
 
+      - name: Prepare AI branch
+        if: failure()
+        run: |
+          git checkout -B "$AI_BRANCH"
+
       - name: AI Failure Analysis & Fix
         if: failure()
         run: npm run analyse_failures
@@ -40,12 +45,15 @@ jobs:
       - name: Commit AI fixes
         if: failure()
         run: |
+          echo "=== GIT STATUS BEFORE COMMIT ==="
+          git status
           git config user.name "ai-bot"
           git config user.email "ai-bot@users.noreply.github.com"
-          git checkout -B "$AI_BRANCH"
           git add .
-          git diff --quiet || git commit -m "AI: Fix Playwright failure (run $GITHUB_RUN_ID)"
-          git push -f origin "$AI_BRANCH"
+          echo "=== GIT STATUS ==="
+          git status
+          git commit -m "AI: Fix Playwright failure (run $GITHUB_RUN_ID)"
+          git push origin "$AI_BRANCH"
 
       - name: Install GitHub CLI
         if: failure()
@@ -54,6 +62,8 @@ jobs:
       - name: Create PR
         if: failure()
         run: |
+          echo "=== GIT STATUS ==="
+          git status
           gh pr create \
             --title "AI Fix (Run $GITHUB_RUN_ID): Playwright failure" \
             --body "Automated AI fix from GitHub Actions run $GITHUB_RUN_ID." \
