@@ -42,24 +42,15 @@ jobs:
         if: failure()
         run: npm run analyse_failures
 
-      - name: Debug git state after AI fix
-        if: failure()
-        run: |
-          echo "=== GIT STATUS ==="
-          git status
-          echo "=== GIT DIFF ==="
-          git diff
-
       - name: Commit AI fixes
         if: failure()
         run: |
           echo "=== GIT STATUS BEFORE COMMIT ==="
           git status
-          git add tests/
-          git commit -m "AI: Fix Playwright failure (run $GITHUB_RUN_ID)" \
-            || echo "No AI code changes to commit"
-          echo "=== LAST COMMIT ==="
-          git log -1 --oneline
+          git add .
+          echo "=== GIT STATUS ==="
+          git status
+          git commit -m "AI: Fix Playwright failure (run $GITHUB_RUN_ID)"
           git push origin "$AI_BRANCH"
 
       - name: Install GitHub CLI
@@ -69,7 +60,8 @@ jobs:
       - name: Create PR
         if: failure()
         run: |
-          gh pr view "$AI_BRANCH" || \
+          echo "=== GIT STATUS ==="
+          git status
           gh pr create \
             --title "AI Fix (Run $GITHUB_RUN_ID): Playwright failure" \
             --body "Automated AI fix from GitHub Actions run $GITHUB_RUN_ID." \
