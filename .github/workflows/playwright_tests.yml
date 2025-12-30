@@ -53,11 +53,14 @@ jobs:
       - name: Commit AI fixes
         if: failure()
         run: |
-          git config user.name "ai-bot"
-          git config user.email "ai-bot@users.noreply.github.com"
-          git add .
-          git diff --quiet || git commit -m "AI: Fix Playwright failure (run $GITHUB_RUN_ID)"
-          git push -f origin "$AI_BRANCH"
+          echo "=== GIT STATUS BEFORE COMMIT ==="
+          git status
+          git add tests/
+          git commit -m "AI: Fix Playwright failure (run $GITHUB_RUN_ID)" \
+            || echo "No AI code changes to commit"
+          echo "=== LAST COMMIT ==="
+          git log -1 --oneline
+          git push origin "$AI_BRANCH"
 
       - name: Install GitHub CLI
         if: failure()
@@ -66,6 +69,7 @@ jobs:
       - name: Create PR
         if: failure()
         run: |
+          gh pr view "$AI_BRANCH" || \
           gh pr create \
             --title "AI Fix (Run $GITHUB_RUN_ID): Playwright failure" \
             --body "Automated AI fix from GitHub Actions run $GITHUB_RUN_ID." \
